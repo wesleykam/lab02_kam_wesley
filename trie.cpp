@@ -5,22 +5,49 @@
 #include <stack>
 #include <utility>
 
+using namespace std;
+
 Trie::Trie():end_of_word(false){
     // TODO: There's a little more initialization to do here, but what?
+    end_of_word = false; 
+
+    for(int i=0; i<26; i++)
+    {
+        roots[i] = NULL;
+    }
 }
 
 Trie::Trie(Trie const& other):end_of_word(other.end_of_word){
     // TODO: Remember to do a deep copy of your structure!
+    this->end_of_word = other.end_of_word;
+    
+    for(int i=0; i<26; i++)
+    {
+        this->roots[i] = new Trie;
+        this->roots[i] = other.roots[i];
+    }
 }
 
 Trie::~Trie(){
     // TODO: Clean up your children!
+    for(int i=0; i<26; i++)
+    {
+        delete roots[i];
+    }
 }
 
 Trie& Trie::operator=(Trie const& other){
     // TODO: Remember to do a deep copy of your structure!
+    /*
+    this->end_of_word = other.end_of_word;
 
-    return *this;
+    for(int i=0; i<26; i++)
+    {
+        this->roots[i] = other.roots[i];
+    }
+
+    return *this;*/
+    return (Trie&)other;
 }
 
 
@@ -38,6 +65,25 @@ void Trie::insert(char const* const str){
     // (Hint: This operation is easier if you use recursion.)
 
     // TODO: Fix this function
+    
+    char *p = (char*)str;
+
+    if(p[0] == '\0')
+    {
+        end_of_word = true;
+        return;
+    }
+
+    if(islower(tolower(p[0])))
+    {
+        if(roots[p[0]-97] == NULL)
+        {
+            roots[p[0]-97] = new Trie;
+        }
+
+        roots[p[0]-97]->insert(p++);
+    }
+    insert(p++);
 }
 
 bool Trie::check(char const* const str) const{
@@ -49,7 +95,25 @@ bool Trie::check(char const* const str) const{
     // (Hint: This operation is easier if you use recursion.)
 
     // TODO: Fix this stub
-    return false;
+
+    char *p = (char*)str;
+
+    if(p[0] == '\0')
+    {
+        return true;
+    }
+    
+    if(!islower(tolower(p[0])))
+    {
+        return check(p++);
+    }
+
+    if(roots[p[0]-97] == NULL)
+    {
+        return false;
+    }
+    
+    return roots[p[0]-97]->check(p++);
 }
 
 char* Trie::firstWithPrefix(char const* const str,unsigned depth) const{
@@ -75,7 +139,50 @@ char* Trie::firstWithPrefix(char const* const str,unsigned depth) const{
     // Remember to check whether your recursive call gave you back NULL!
 
     // TODO: Fix this stub.
-    return NULL;
+    
+    char *p = (char*)str;
+
+    if(!check(p))
+    {
+        return NULL;
+    }
+
+    if(islower(tolower(p[0])))
+    {
+        roots[p[0]-97]->firstWithPrefix(p++, depth++);
+    }
+    
+    if(p[0] != '\0' && !islower(tolower(p[0])))
+    {
+        firstWithPrefix(p++, depth);
+    }
+
+
+
+    if(p[0] == '\0')
+    {
+        for(int i=0; i<26; i++)
+        {
+            if(!end_of_word)
+            {
+                p[0] = i+97;
+                roots[i]->firstWithPrefix((char*)'\0', depth++);
+            }
+        }
+    }
+    
+
+    char temp[depth+1];
+    temp[depth+1] = '\0';
+    temp[depth] = p[0];
+
+
+    if(depth == 0)
+    {
+        return temp;
+    }
+
+    return (char*)'\0';
 }
 
 
