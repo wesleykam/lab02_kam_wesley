@@ -181,7 +181,7 @@ char* Trie::firstWithPrefix(char const* const str,unsigned depth) const{
     {
         return temp;
     }
-
+    // asdf
     return (char*)'\0';
 }
 
