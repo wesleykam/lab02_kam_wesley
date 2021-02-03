@@ -215,7 +215,7 @@ Trie load_trie(std::istream& is){
         temp.insert(c);
     }
 
-    //a
+    
     return Trie();
 }
 
