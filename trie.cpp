@@ -5,6 +5,7 @@
 #include <stack>
 #include <utility>
 #include <fstream>
+#include <cstring>
 
 using namespace std;
 
@@ -67,7 +68,8 @@ void Trie::insert(char const* const str){
 
     // TODO: Fix this function
     
-    char *p = (char*)str;
+    char p[100];
+    strcpy(p, str);
 
     if(p[0] == '\0')
     {
@@ -82,9 +84,9 @@ void Trie::insert(char const* const str){
             roots[p[0]-97] = new Trie;
         }
 
-        roots[p[0]-97]->insert(p++);
+        roots[p[0]-97]->insert(&p[1]);
     }
-    insert(p++);
+    insert(&p[1]);
 }
 
 bool Trie::check(char const* const str) const{
@@ -106,7 +108,7 @@ bool Trie::check(char const* const str) const{
     
     if(!islower(tolower(p[0])))
     {
-        return check(p++);
+        return check(&p[1]);
     }
 
     if(roots[p[0]-97] == NULL)
@@ -114,7 +116,7 @@ bool Trie::check(char const* const str) const{
         return false;
     }
     
-    return roots[p[0]-97]->check(p++);
+    return roots[p[0]-97]->check(&p[1]);
 }
 
 char* Trie::firstWithPrefix(char const* const str,unsigned depth) const{
@@ -214,19 +216,25 @@ Trie load_trie(std::istream& is){
         c = str.c_str();
         temp.insert(c);
     }
-
     
-    return Trie();
+    
+    return temp;
 }
 
 Trie load_trie(std::string filename){
     // Open an input stream to the file `filename`, 
     //  then pass that input stream to the other form of load_trie().
+    
+    Trie temp;
+
     ifstream inStream;
     inStream.open(filename);
 
-    load_trie(inStream);
-    // Should be easy!
+    temp = load_trie(inStream);
 
-    return Trie();
+    inStream.close();
+
+    return temp;
+
+    // Should be easy!
 }
