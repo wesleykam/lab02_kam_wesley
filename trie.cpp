@@ -100,7 +100,8 @@ bool Trie::check(char const* const str) const{
 
     // TODO: Fix this stub
 
-    char *p = (char*)str;
+    char p[100];
+    strcpy(p, str);
 
     if(p[0] == '\0')
     {
@@ -109,7 +110,7 @@ bool Trie::check(char const* const str) const{
     
     if(!islower(tolower(p[0])))
     {
-        return check(&p[1]);
+        return false;
     }
 
     if(roots[p[0]-97] == NULL)
