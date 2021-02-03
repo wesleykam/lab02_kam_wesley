@@ -4,6 +4,7 @@
 #include <cctype>
 #include <stack>
 #include <utility>
+#include <fstream>
 
 using namespace std;
 
@@ -158,7 +159,6 @@ char* Trie::firstWithPrefix(char const* const str,unsigned depth) const{
     }
 
 
-
     if(p[0] == '\0')
     {
         for(int i=0; i<26; i++)
@@ -172,8 +172,7 @@ char* Trie::firstWithPrefix(char const* const str,unsigned depth) const{
     }
     
 
-    char temp[depth+1];
-    temp[depth+1] = '\0';
+    char temp[depth];
     temp[depth] = p[0];
 
 
@@ -181,8 +180,8 @@ char* Trie::firstWithPrefix(char const* const str,unsigned depth) const{
     {
         return temp;
     }
-    // asdf
-    return (char*)'\0';
+        
+    return p;
 }
 
 
@@ -203,14 +202,30 @@ Trie load_trie(std::istream& is){
     // Remember, you already skip whitespace in Trie::insert(), so don't worry
     //  about stripping any whitespace here!
 
-    // TODO: Fix this stub.
+    // TODO: Fix this stub
+
+    string str;
+    const char *c;
+    Trie temp;
+    
+    while( !is.eof() )
+    {
+        getline(is, str);
+        c = str.c_str();
+        temp.insert(c);
+    }
+
+    
     return Trie();
 }
 
 Trie load_trie(std::string filename){
     // Open an input stream to the file `filename`, 
     //  then pass that input stream to the other form of load_trie().
+    ifstream inStream;
+    inStream.open(filename);
 
+    load_trie(inStream);
     // Should be easy!
 
     return Trie();
