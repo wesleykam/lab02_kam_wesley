@@ -76,7 +76,7 @@ void Trie::insert(char const* const str){
         end_of_word = true;
         return;
     }
-    //cout << p[0] << endl;
+    //cout << p[0];
     if(islower(tolower(p[0])))
     {
         if(roots[p[0]-97] == NULL)
@@ -216,7 +216,7 @@ Trie load_trie(std::istream& is){
         getline(is, str);
         c = str.c_str();
         temp.insert(c);
-        break;
+        //cout << endl;
     }
     
     
