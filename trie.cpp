@@ -240,14 +240,14 @@ Trie load_trie(std::istream& is){
     // TODO: Fix this stub
 
     string str;
-    const char *c;
+    char c[100];
     Trie temp;
     getline(is, str); 
 
     while( str != "" )
     {
         getline(is, str);
-        c = str.c_str();
+        strcpy(c, str.c_str());
         temp.insert(c);
     }
     
