@@ -89,7 +89,7 @@ void Trie::insert(char const* const str){
 
     // TODO: Fix this function
     
-    char p[100];
+    char *p;
     strcpy(p, str);
 
     //cout << p[0];
@@ -123,7 +123,7 @@ bool Trie::check(char const* const str) const{
 
     // TODO: Fix this stub
 
-    char p[100];
+    char *p;
     strcpy(p, str);
     /*
     bool b = (roots[p[0]-97] == NULL);
