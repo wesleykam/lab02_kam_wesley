@@ -137,12 +137,11 @@ bool Trie::check(char const* const str) const{
     {
         return false;
     }
-    cout << 3;
     if(roots[p[0]-97] == NULL)
     {
         return false;
     }    
-    if(p[1] == '\0')
+    if(p[1] == '\0' && roots[p[0]-97] != NULL)
     {
         return true;
     }
