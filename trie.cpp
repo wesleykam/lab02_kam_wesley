@@ -243,8 +243,9 @@ Trie load_trie(std::istream& is){
     string str;
     const char *c;
     Trie temp;
-    
-    while( !is.eof() )
+    getline(is, str); 
+
+    while( str != "" )
     {
         getline(is, str);
         c = str.c_str();
