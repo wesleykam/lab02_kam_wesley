@@ -123,7 +123,7 @@ bool Trie::check(char const* const str) const{
 
     // TODO: Fix this stub
 
-    char p[100000];
+    char p[100];
     strcpy(p, str);
     /*
     bool b = (roots[p[0]-97] == NULL);
