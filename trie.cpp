@@ -25,8 +25,11 @@ Trie::Trie(Trie const& other):end_of_word(other.end_of_word){
     
     for(int i=0; i<26; i++)
     {
-        this->roots[i] = new Trie;
-        this->roots[i] = other.roots[i];
+        if(other.roots[i] != NULL)
+        {
+            this->roots[i] = new Trie;
+            this->roots[i] = other.roots[i];
+        }
     }
 }
 
@@ -34,22 +37,40 @@ Trie::~Trie(){
     // TODO: Clean up your children!
     for(int i=0; i<26; i++)
     {
-        delete roots[i];
+        if(roots[i] != NULL)
+            delete roots[i];
     }
 }
 
 Trie& Trie::operator=(Trie const& other){
     // TODO: Remember to do a deep copy of your structure!
-    /*
+    
+	if (this == &other)
+	{
+		return *this;	
+	}
+    
+
     this->end_of_word = other.end_of_word;
+    
+    Trie *p = nullptr;
 
     for(int i=0; i<26; i++)
     {
-        this->roots[i] = other.roots[i];
-    }
+        if(other.roots[i] != NULL)
+        {
+            p = new Trie(*other.roots[i]);
+            //this->roots[i] = new Trie;
+            //this->roots[i] = p;
+            
+            swap(roots[i], p);
 
-    return *this;*/
-    return (Trie&)other;
+            //cout << i;
+        }
+    }
+    
+    return *this;
+    
 }
 
 
@@ -71,20 +92,22 @@ void Trie::insert(char const* const str){
     char p[100];
     strcpy(p, str);
 
-    if(p[0] == '\0')
-    {
-        end_of_word = true;
-        return;
-    }
     //cout << p[0];
     if(islower(tolower(p[0])))
     {
         if(roots[p[0]-97] == NULL)
-        {
+        {          
             roots[p[0]-97] = new Trie;
         }
+        
+        if(p[1] == '\0')
+        {
+            end_of_word = true;
+            //cout << endl;
+            return;
+        }
 
-        roots[p[0]-97]->insert(&p[1]);
+        roots[p[0]-97]->insert(&p[1]);       
         return;
     }
     insert(&p[1]);
@@ -102,23 +125,31 @@ bool Trie::check(char const* const str) const{
 
     char p[100];
     strcpy(p, str);
-
-    if(p[0] == '\0')
-    {
-        return true;
-    }
-    
+    /*
+    bool b = (roots[p[0]-97] == NULL);
+    cout << p[0] << endl;
+    cout << b << endl;
+    cout << p[0]-97 << endl;
+    cout << b << endl;
+    cout << "hi" << endl;
+    */
     if(!islower(tolower(p[0])))
     {
         return false;
     }
-
+    cout << 3;
     if(roots[p[0]-97] == NULL)
     {
         return false;
+    }    
+    if(p[1] == '\0')
+    {
+        return true;
     }
-    
-    return roots[p[0]-97]->check(&p[1]);
+    else
+    {
+        return roots[p[0]-97]->check(&p[1]);
+    }
 }
 
 char* Trie::firstWithPrefix(char const* const str,unsigned depth) const{
@@ -145,7 +176,8 @@ char* Trie::firstWithPrefix(char const* const str,unsigned depth) const{
 
     // TODO: Fix this stub.
     
-    char *p = (char*)str;
+    char p[100];
+    strcpy(p, str);
 
     if(!check(p))
     {
@@ -154,12 +186,12 @@ char* Trie::firstWithPrefix(char const* const str,unsigned depth) const{
 
     if(islower(tolower(p[0])))
     {
-        roots[p[0]-97]->firstWithPrefix(p++, depth++);
+        roots[p[0]-97]->firstWithPrefix(&p[0], depth++);
     }
     
     if(p[0] != '\0' && !islower(tolower(p[0])))
     {
-        firstWithPrefix(p++, depth);
+        firstWithPrefix(&p[0], depth);
     }
 
 
@@ -217,7 +249,6 @@ Trie load_trie(std::istream& is){
         getline(is, str);
         c = str.c_str();
         temp.insert(c);
-        //cout << endl;
     }
     
     
