@@ -27,8 +27,7 @@ Trie::Trie(Trie const& other):end_of_word(other.end_of_word){
     {
         if(other.roots[i] != NULL)
         {
-            this->roots[i] = new Trie;
-            this->roots[i] = other.roots[i];
+            this->roots[i] = new Trie(*other.roots[i]);
         }
     }
 }
@@ -54,18 +53,22 @@ Trie& Trie::operator=(Trie const& other){
     this->end_of_word = other.end_of_word;
     
     Trie *p = nullptr;
+    
+    for(int i=0; i<26; i++)
+    {
+        if(roots[i] != NULL)
+        {
+            delete roots[i];
+        }
+    }
 
     for(int i=0; i<26; i++)
     {
         if(other.roots[i] != NULL)
         {
-            p = new Trie(*other.roots[i]);
-            //this->roots[i] = new Trie;
-            //this->roots[i] = p;
-            
-            swap(roots[i], p);
-
-            //cout << i;
+            //p = new Trie(*other.roots[i]);
+            this->roots[i] = new Trie(*other.roots[i]);
+            //delete p;
         }
     }
     
@@ -91,26 +94,40 @@ void Trie::insert(char const* const str){
     
     char p[1000];
     strcpy(p, str);
+    
+    if(p[1] == '\0')
+    {
+        end_of_word = true;
+    }
 
-    //cout << p[0];
     if(islower(tolower(p[0])))
     {
+        cout << p[0];
         if(roots[p[0]-97] == NULL)
         {          
             roots[p[0]-97] = new Trie;
         }
         
-        if(p[1] == '\0')
+        if(end_of_word)
         {
-            end_of_word = true;
-            //cout << endl;
             return;
         }
+        else
+        {
+            roots[p[0]-97]->insert(&p[1]);  
+            return;
+        }
+    }
 
-        roots[p[0]-97]->insert(&p[1]);       
+    if(end_of_word)
+    {
         return;
     }
-    insert(&p[1]);
+    else
+    {
+        insert(&p[1]);
+        return;
+    }
 }
 
 bool Trie::check(char const* const str) const{
@@ -133,14 +150,17 @@ bool Trie::check(char const* const str) const{
     cout << b << endl;
     cout << "hi" << endl;
     */
+    
     if(!islower(tolower(p[0])))
     {
         return false;
     }
+
     if(roots[p[0]-97] == NULL)
     {
         return false;
-    }    
+    }
+
     if(p[1] == '\0' && roots[p[0]-97] != NULL)
     {
         return true;
@@ -177,46 +197,48 @@ char* Trie::firstWithPrefix(char const* const str,unsigned depth) const{
     
     char p[100];
     strcpy(p, str);
+    bool pass = false;
 
-    if(!check(p))
+    if(!pass && !islower(tolower(p[0])))
+    {
+        firstWithPrefix(&p[1], depth);
+    }
+
+    if(!pass && roots[p[0]-97] == NULL)
     {
         return NULL;
     }
 
-    if(islower(tolower(p[0])))
+    if(pass || p[0] == '\0')   //(pass || (p[1] == '\0' && roots[p[0]-97] != NULL))
     {
-        roots[p[0]-97]->firstWithPrefix(&p[0], depth++);
-    }
-    
-    if(p[0] != '\0' && !islower(tolower(p[0])))
-    {
-        firstWithPrefix(&p[0], depth);
-    }
-
-
-    if(p[0] == '\0')
-    {
-        for(int i=0; i<26; i++)
+        pass = true;
+        
+        if(!end_of_word)
         {
-            if(!end_of_word)
+            for(int i=0; i<26; i++)
             {
-                p[0] = i+97;
-                roots[i]->firstWithPrefix((char*)'\0', depth++);
-            }
+                if(roots[i] != NULL)
+                { 
+                    char c[1] = {i+97};
+                    roots[i]->firstWithPrefix(c, depth++);
+                }
+            }   
         }
     }
+    else
+    {
+        cout << p[0];
+        roots[p[0]-97]->firstWithPrefix(&p[1], depth++);
+    }
     
-
-    char temp[depth];
-    temp[depth] = p[0];
-
+    char *temp[depth+1];
+    
+    temp[depth] = &p[0];
 
     if(depth == 0)
     {
-        return temp;
+        return *temp;
     }
-        
-    return p;
 }
 
 
@@ -241,18 +263,18 @@ Trie load_trie(std::istream& is){
 
     string str;
     char c[100];
-    Trie temp;
+    Trie *temp = new Trie;
     getline(is, str); 
 
     while( str != "" )
     {
-        getline(is, str);
         strcpy(c, str.c_str());
-        temp.insert(c);
-    }
+        temp->insert(c);
+        cout << endl;
+        getline(is, str);
+    } 
     
-    
-    return temp;
+    return *temp;
 }
 
 Trie load_trie(std::string filename){
