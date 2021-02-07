@@ -241,7 +241,7 @@ char* Trie::firstWithPrefix(char const* const str,unsigned depth) const{
     }
 }
 
-
+/*
 Trie load_trie(std::istream& is){
     // Given an open input stream, read words on separate lines into a new Trie.
     // If no lines can be read from the input stream, return a default-constructed Trie.
@@ -276,6 +276,16 @@ Trie load_trie(std::istream& is){
     
     return *temp;
 }
+*/
+
+Trie load_trie(std::istream& is){
+    Trie* loading = new Trie;
+    string str;
+    while (std::getline(is, str)) {
+        loading->insert(str.c_str());
+    }
+    return *loading;
+}
 
 Trie load_trie(std::string filename){
     // Open an input stream to the file `filename`, 
@@ -294,3 +304,12 @@ Trie load_trie(std::string filename){
 
     // Should be easy!
 }
+
+
+
+
+
+
+
+
+
