@@ -250,12 +250,8 @@ Trie load_trie(std::istream& is){
 
     while( getline(is, str) )
     {
-        if(str != "")
-        {
-            temp->insert(str.c_str());
-            str = "";
-            cout << endl;
-        }
+        temp->insert(str.c_str());
+        cout << endl;
     } 
  
     return *temp;
