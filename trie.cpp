@@ -100,7 +100,7 @@ void Trie::insert(char const* const str){
 
     if(islower(tolower(str[0])))
     {
-        cout << str[0];
+        //cout << str[0];
         if(roots[str[0]-97] == NULL)
         {          
             roots[str[0]-97] = new Trie;
@@ -251,7 +251,7 @@ Trie load_trie(std::istream& is){
     while( getline(is, str) )
     {
         temp->insert(str.c_str());
-        cout << endl;
+        //cout << endl;
     } 
  
     return *temp;
