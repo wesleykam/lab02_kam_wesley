@@ -52,8 +52,6 @@ Trie& Trie::operator=(Trie const& other){
 
     this->end_of_word = other.end_of_word;
     
-    Trie *p = nullptr;
-    
     for(int i=0; i<26; i++)
     {
         if(roots[i] != NULL)
@@ -85,7 +83,7 @@ void Trie::insert(char const* const str){
     // For other characters, identify a position in your 
     //  roots array by which letter you were given.
     // Remember, characters are numbers in computers!
-    // What could you do to have an ID of 0 for 'a'?
+    // What could youi do to have an ID of 0 for 'a'?
     // (Hint: Take a look at an ASCII table!)
 
     // (Hint: This operation is easier if you use recursion.)
@@ -194,7 +192,7 @@ char* Trie::firstWithPrefix(char const* const str,unsigned depth) const{
     // Remember to check whether your recursive call gave you back NULL!
 
     // TODO: Fix this stub.
-    
+    /*
     char p[100];
     strcpy(p, str);
     bool pass = false;
@@ -219,8 +217,7 @@ char* Trie::firstWithPrefix(char const* const str,unsigned depth) const{
             {
                 if(roots[i] != NULL)
                 { 
-                    char c[1] = {i+97};
-                    roots[i]->firstWithPrefix(c, depth++);
+                    roots[i]->firstWithPrefix(&p[0], depth++);
                 }
             }   
         }
@@ -231,17 +228,19 @@ char* Trie::firstWithPrefix(char const* const str,unsigned depth) const{
         roots[p[0]-97]->firstWithPrefix(&p[1], depth++);
     }
     
-    char *temp[depth+1];
-    
+    char temp[depth];
+
     temp[depth] = &p[0];
 
     if(depth == 0)
     {
         return *temp;
     }
+    */
+    return NULL;
 }
 
-/*
+
 Trie load_trie(std::istream& is){
     // Given an open input stream, read words on separate lines into a new Trie.
     // If no lines can be read from the input stream, return a default-constructed Trie.
@@ -262,41 +261,25 @@ Trie load_trie(std::istream& is){
     // TODO: Fix this stub
 
     string str;
-    char c[100];
     Trie *temp = new Trie;
-    getline(is, str); 
 
-    while( str != "" )
+    while( getline(is, str) )
     {
-        strcpy(c, str.c_str());
-        temp->insert(c);
-        cout << endl;
-        getline(is, str);
+        temp->insert(str.c_str());
     } 
-    
+ 
     return *temp;
 }
-*/
 
-Trie load_trie(std::istream& is){
-    Trie* loading = new Trie;
-    string str;
-    while (std::getline(is, str)) {
-        loading->insert(str.c_str());
-    }
-    return *loading;
-}
 
 Trie load_trie(std::string filename){
     // Open an input stream to the file `filename`, 
     //  then pass that input stream to the other form of load_trie().
-    
-    Trie temp;
 
     ifstream inStream;
     inStream.open(filename);
 
-    temp = load_trie(inStream);
+    Trie temp = load_trie(inStream);
 
     inStream.close();
 
