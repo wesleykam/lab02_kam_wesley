@@ -191,7 +191,7 @@ char* Trie::firstWithPrefix(char const* const str,unsigned depth) const{
 
     if(!pass && (str == "" || roots[str[0]-97] == NULL))
     {
-        return NULL;
+        return nullptr;
     }
 
     if(pass || str[0] == '\0')   //(pass || (p[1] == '\0' && roots[p[0]-97] != NULL))
