@@ -90,20 +90,19 @@ void Trie::insert(char const* const str){
 
     // TODO: Fix this function
     
-    char p[1000];
-    strcpy(p, str);
+    //char p = *str;
+    //strcpy(p, str);
     
-    if(p[1] == '\0')
+    if(str[1] == '\0')
     {
         end_of_word = true;
     }
 
-    if(islower(tolower(p[0])))
+    if(islower(tolower(str[0])))
     {
-        cout << p[0];
-        if(roots[p[0]-97] == NULL)
+        if(roots[str[0]-97] == NULL)
         {          
-            roots[p[0]-97] = new Trie;
+            roots[str[0]-97] = new Trie;
         }
         
         if(end_of_word)
@@ -112,7 +111,7 @@ void Trie::insert(char const* const str){
         }
         else
         {
-            roots[p[0]-97]->insert(&p[1]);  
+            roots[str[0]-97]->insert(&str[1]);  
             return;
         }
     }
@@ -123,7 +122,7 @@ void Trie::insert(char const* const str){
     }
     else
     {
-        insert(&p[1]);
+        insert(&str[1]);
         return;
     }
 }
@@ -266,6 +265,7 @@ Trie load_trie(std::istream& is){
     while( getline(is, str) )
     {
         temp->insert(str.c_str());
+        cout << endl;
     } 
  
     return *temp;
