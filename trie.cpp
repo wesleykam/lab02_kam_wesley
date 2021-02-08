@@ -183,18 +183,20 @@ char* Trie::firstWithPrefix(char const* const str,unsigned depth) const{
     // TODO: Fix this stub.
     
     bool pass = false;
+    char *temp = nullptr;
+    char c = 0;
 
     if(!pass && !islower(tolower(str[0])))
     {
         firstWithPrefix(&str[1], depth);
     }
 
-    if(!pass && (str == "" || roots[str[0]-97] == NULL))
+    if(!pass && roots[str[0]-97] == NULL)
     {
         return nullptr;
     }
 
-    if(pass || str[0] == '\0')   //(pass || (p[1] == '\0' && roots[p[0]-97] != NULL))
+    if(pass || (str[1] == '\0' && roots[str[0]-97] != NULL))
     {
         pass = true;
         
@@ -203,21 +205,25 @@ char* Trie::firstWithPrefix(char const* const str,unsigned depth) const{
             for(int i=0; i<26; i++)
             {
                 if(roots[i] != NULL)
-                { 
+                {   
+                    char c = i+97;
                     roots[i]->firstWithPrefix(&str[0], depth++);
+                    break;
                 }
             }   
         }
     }
     else
     {
-        cout << str[0];
         roots[str[0]-97]->firstWithPrefix(&str[1], depth++);
     }
     
-    char *temp = new char[depth+1];
-
-    temp[depth] = str[0];
+    temp = new char[depth+1];
+    
+    if(c != 0)
+        temp[depth] = c;
+    else
+        temp[depth] = str[0];
 
     if(depth == 0)
     {
