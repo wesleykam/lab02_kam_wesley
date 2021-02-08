@@ -137,35 +137,24 @@ bool Trie::check(char const* const str) const{
     // (Hint: This operation is easier if you use recursion.)
 
     // TODO: Fix this stub
-
-    char p[1000];
-    strcpy(p, str);
-    /*
-    bool b = (roots[p[0]-97] == NULL);
-    cout << p[0] << endl;
-    cout << b << endl;
-    cout << p[0]-97 << endl;
-    cout << b << endl;
-    cout << "hi" << endl;
-    */
     
-    if(!islower(tolower(p[0])))
+    if(!islower(tolower(str[0])))
     {
         return false;
     }
 
-    if(roots[p[0]-97] == NULL)
+    if(roots[str[0]-97] == NULL)
     {
         return false;
     }
 
-    if(p[1] == '\0' && roots[p[0]-97] != NULL)
+    if(str[1] == '\0' && roots[str[0]-97] != NULL)
     {
         return true;
     }
     else
     {
-        return roots[p[0]-97]->check(&p[1]);
+        return roots[str[0]-97]->check(&str[1]);
     }
 }
 
@@ -192,22 +181,20 @@ char* Trie::firstWithPrefix(char const* const str,unsigned depth) const{
     // Remember to check whether your recursive call gave you back NULL!
 
     // TODO: Fix this stub.
-    /*
-    char p[100];
-    strcpy(p, str);
+    
     bool pass = false;
 
-    if(!pass && !islower(tolower(p[0])))
+    if(!pass && !islower(tolower(str[0])))
     {
-        firstWithPrefix(&p[1], depth);
+        firstWithPrefix(&str[1], depth);
     }
 
-    if(!pass && roots[p[0]-97] == NULL)
+    if(!pass && (str == "" || roots[str[0]-97] == NULL))
     {
         return NULL;
     }
 
-    if(pass || p[0] == '\0')   //(pass || (p[1] == '\0' && roots[p[0]-97] != NULL))
+    if(pass || str[0] == '\0')   //(pass || (p[1] == '\0' && roots[p[0]-97] != NULL))
     {
         pass = true;
         
@@ -217,27 +204,25 @@ char* Trie::firstWithPrefix(char const* const str,unsigned depth) const{
             {
                 if(roots[i] != NULL)
                 { 
-                    roots[i]->firstWithPrefix(&p[0], depth++);
+                    roots[i]->firstWithPrefix(&str[0], depth++);
                 }
             }   
         }
     }
     else
     {
-        cout << p[0];
-        roots[p[0]-97]->firstWithPrefix(&p[1], depth++);
+        cout << str[0];
+        roots[str[0]-97]->firstWithPrefix(&str[1], depth++);
     }
     
-    char temp[depth];
+    char *temp = new char[depth+1];
 
-    temp[depth] = &p[0];
+    temp[depth] = str[0];
 
     if(depth == 0)
     {
-        return *temp;
+        return temp;
     }
-    */
-    return NULL;
 }
 
 
